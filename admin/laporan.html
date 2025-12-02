@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAC Admin - Daftar Laporan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #264653; 
+            --accent: #2A9D8F;
+            --bg-light: #F4F7F6;
+            --white: #FFFFFF;
+            --sidebar-width: 260px;
+            --radius: 8px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-light); display: flex; min-height: 100vh; }
+
+        /* Sidebar (Sama) */
+        .sidebar {
+            width: var(--sidebar-width); background: var(--primary); color: white;
+            padding: 30px 20px; position: fixed; height: 100vh; display: flex; flex-direction: column;
+        }
+        .brand { margin-bottom: 40px; padding-left: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; }
+        .menu { display: flex; flex-direction: column; gap: 10px; }
+        .menu-item {
+            text-decoration: none; padding: 12px 20px; border-radius: 8px; color: #ccc;
+            font-weight: 500; display: flex; align-items: center; gap: 15px; transition: 0.3s;
+        }
+        .menu-item:hover, .menu-item.active { background-color: rgba(255,255,255,0.1); color: white; border-left: 4px solid var(--accent); }
+        .menu-item i { width: 25px; text-align: center; }
+        .logout-link { margin-top: auto; color: #E76F51 !important; }
+
+        /* Main Content */
+        .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 40px; }
+
+        /* Search Bar Style */
+        .search-container {
+            display: flex; gap: 10px; margin-bottom: 30px;
+            background: white; padding: 15px; border-radius: var(--radius);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .search-input {
+            flex: 1; border: none; outline: none; font-size: 1rem;
+        }
+        .search-btn {
+            background: var(--accent); color: white; border: none;
+            padding: 10px 20px; border-radius: 5px; cursor: pointer;
+        }
+
+        /* Grid Layout */
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        /* Report Card */
+        .report-card {
+            background: white; padding: 25px; border-radius: var(--radius);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative;
+            border-top: 5px solid #ccc; transition: 0.3s;
+        }
+        .report-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+        .status-new { border-top-color: #E9C46A; }
+        .status-process { border-top-color: #2A9D8F; }
+        .status-done { border-top-color: #264653; }
+
+        .card-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
+        .ticket-id { font-weight: bold; background: #eee; padding: 2px 8px; border-radius: 4px; font-size: 0.85rem; }
+        .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; color: white; font-weight: bold; }
+        
+        .badge-new { background: #E9C46A; color: #333; }
+        .badge-process { background: #2A9D8F; }
+        .badge-done { background: #264653; }
+
+        .card-body h3 { font-size: 1.1rem; color: var(--primary); margin-bottom: 5px; }
+        .card-meta { font-size: 0.9rem; color: #666; display: block; margin-bottom: 10px; }
+        .card-desc { font-size: 0.9rem; color: #555; line-height: 1.5; margin-bottom: 20px; }
+
+        .card-footer { display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #eee; padding-top: 15px; }
+        .btn-sm { text-decoration: none; font-size: 0.85rem; padding: 5px 12px; border-radius: 4px; border: 1px solid #ddd; color: #555; transition: 0.2s; }
+        .btn-sm:hover { background: #eee; }
+        .btn-action { background: var(--primary); color: white; border: none; }
+        .btn-action:hover { background: #1a3a45; color: white; }
+
+        @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; width: 100%; } }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="brand"><h2>BAC ADMIN</h2><span>Panel Pengelola</span></div>
+        <nav class="menu">
+            <a href="dashboardadmin.html" class="menu-item"><i class="fas fa-chart-line"></i> Dashboard</a>
+            
+            <a href="laporan.html" class="menu-item active"><i class="fas fa-inbox"></i> Laporan Masuk</a>
+            
+            <a href="daftarmahasiswa.html" class="menu-item"><i class="fas fa-users"></i> Data Mahasiswa</a>
+            <a href="../index.html" class="menu-item logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <h2 style="margin-bottom:20px; color:#264653;">Daftar Semua Laporan</h2>
+
+        <div class="search-container">
+            <i class="fas fa-search" style="color:#888; align-self:center;"></i>
+            <input type="text" id="searchInput" class="search-input" placeholder="Cari ID, Pelapor, atau Kategori...">
+            <button class="search-btn">Cari</button>
+        </div>
+
+        <div class="report-grid" id="reportGrid">
+            
+            <div class="report-card status-new">
+                <div class="card-header">
+                    <span class="ticket-id">#LP-009</span>
+                    <span class="badge badge-new">Baru</span>
+                </div>
+                <div class="card-body">
+                    <h3>Bullying Verbal (SARA)</h3>
+                    <span class="card-meta"><i class="fas fa-user"></i> Anonim | 02 Des 2025</span>
+                    <p class="card-desc">Pelapor mengaku diejek oleh sekelompok mahasiswa di kantin lantai 3...</p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn-sm">Detail</a>
+                    <a href="#" class="btn-sm btn-action">Proses</a>
+                </div>
+            </div>
+
+            <div class="report-card status-process">
+                <div class="card-header">
+                    <span class="ticket-id">#LP-008</span>
+                    <span class="badge badge-process">Diproses</span>
+                </div>
+                <div class="card-body">
+                    <h3>Cyberbullying Twitter</h3>
+                    <span class="card-meta"><i class="fas fa-user"></i> Siti Aminah (28019xxx)</span>
+                    <p class="card-desc">Penyebaran foto pribadi tanpa izin di akun base kampus...</p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn-sm">Detail</a>
+                    <a href="#" class="btn-sm btn-action">Update</a>
+                </div>
+            </div>
+
+            <div class="report-card status-done">
+                <div class="card-header">
+                    <span class="ticket-id">#LP-005</span>
+                    <span class="badge badge-done">Selesai</span>
+                </div>
+                <div class="card-body">
+                    <h3>Pemalakan Parkiran</h3>
+                    <span class="card-meta"><i class="fas fa-user"></i> Budi Santoso (28021xxx)</span>
+                    <p class="card-desc">Kasus selesai. Pelaku telah diberikan SP 1 dan mediasi berhasil.</p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn-sm">Arsip</a>
+                </div>
+            </div>
+
+            <div class="report-card status-new">
+                <div class="card-header">
+                    <span class="ticket-id">#LP-010</span>
+                    <span class="badge badge-new">Baru</span>
+                </div>
+                <div class="card-body">
+                    <h3>Pengucilan Kelompok</h3>
+                    <span class="card-meta"><i class="fas fa-user"></i> Sarah (28033xxx)</span>
+                    <p class="card-desc">Tidak dimasukkan ke grup tugas dan dipersulit oleh ketua kelas.</p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn-sm">Detail</a>
+                    <a href="#" class="btn-sm btn-action">Proses</a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            let filter = this.value.toLowerCase();
+            let cards = document.querySelectorAll('.report-card');
+
+            cards.forEach(function(card) {
+                let text = card.textContent.toLowerCase();
+                if(text.includes(filter)) {
+                    card.style.display = "";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+    </script>
+</body>
+</html>

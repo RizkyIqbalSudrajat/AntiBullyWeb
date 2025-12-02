@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Binus Anti-Bullying Center (BAC) - Login</title>
     <style>
+        /* --- CSS VARIABLES & RESET --- */
         :root {
             --primary: #2A9D8F;
             --secondary: #264653;
@@ -100,7 +101,7 @@
         .input-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; }
         .input-group input {
             width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;
-            box-sizing: border-box; /* Fix padding width issue */
+            box-sizing: border-box; 
         }
 
         .btn-login {
@@ -109,7 +110,7 @@
         }
         .btn-login:hover { background: var(--primary); }
 
-        /* --- CONTENT SECTIONS (SCROLLABLE) --- */
+        /* --- CONTENT SECTIONS --- */
         .section { padding: 80px 5%; }
         .section h2 { text-align: center; font-size: 2.5rem; color: var(--secondary); margin-bottom: 40px; }
         
@@ -127,10 +128,8 @@
         }
         .feature-icon { font-size: 3rem; margin-bottom: 20px; display: block; }
 
-        /* Footer */
         footer { background: var(--secondary); color: white; text-align: center; padding: 20px; }
 
-        /* Responsive */
         @media (max-width: 800px) {
             .hero { flex-direction: column; text-align: center; justify-content: center; }
             .hero-text { padding: 0; margin-bottom: 40px; }
@@ -161,7 +160,8 @@
 
         <div class="login-card">
             <h2>Login Binusian</h2>
-            <form action="dashboard.html" method="GET"> 
+            
+            <form id="loginForm"> 
                 <div class="input-group">
                     <label for="nim">NIM / Email Binus</label>
                     <input type="text" id="nim" name="username" placeholder="Contoh: 280123456" required>
@@ -186,10 +186,6 @@
                 <strong>Binus Anti-Bullying Center (BAC)</strong> didirikan sebagai wujud komitmen universitas 
                 untuk menciptakan lingkungan belajar yang inklusif, aman, dan mendukung kesehatan mental.
             </p>
-            <p style="margin-top: 20px;">
-                Kami menjamin <strong>kerahasiaan pelapor</strong>, menyediakan pendampingan psikologis, 
-                dan menegakkan sanksi disipliner yang tegas bagi pelaku sesuai peraturan kampus.
-            </p>
         </div>
     </section>
 
@@ -199,7 +195,7 @@
             <div class="feature-box">
                 <span class="feature-icon">🛡️</span>
                 <h3>Pelaporan Aman</h3>
-                <p>Laporkan insiden bullying verbal, fisik, maupun cyber dengan bukti yang valid. Identitas bisa disamarkan.</p>
+                <p>Laporkan insiden bullying verbal, fisik, maupun cyber dengan bukti yang valid.</p>
             </div>
             <div class="feature-box">
                 <span class="feature-icon">⚖️</span>
@@ -212,6 +208,26 @@
     <footer>
         <p>&copy; 2025 Binus Anti-Bullying Center. All Rights Reserved.</p>
     </footer>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Mencegah form reload halaman secara default
+
+            // Ambil nilai input
+            var nim = document.getElementById('nim').value;
+            var password = document.getElementById('password').value;
+
+            // LOGIKA LOGIN
+            if (nim === 'admin' && password === '123') {
+                // Jika Admin -> Masuk ke dashboard admin
+                // Pastikan Anda sudah membuat folder 'admin' dan file 'dashboardadmin.html' di dalamnya
+                window.location.href = 'admin/dashboardadmin.html';
+            } else {
+                // Jika User Biasa (NIM lain) -> Masuk ke dashboard user
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
 
 </body>
 </html>

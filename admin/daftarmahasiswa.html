@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAC Admin - Data Mahasiswa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #264653; 
+            --accent: #2A9D8F;
+            --bg-light: #F4F7F6;
+            --sidebar-width: 260px;
+            --radius: 8px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-light); display: flex; min-height: 100vh; }
+
+        /* Sidebar (Sama) */
+        .sidebar {
+            width: var(--sidebar-width); background: var(--primary); color: white;
+            padding: 30px 20px; position: fixed; height: 100vh; display: flex; flex-direction: column;
+        }
+        .brand { margin-bottom: 40px; padding-left: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; }
+        .brand h2 { font-size: 1.5rem; font-weight: bold; color: var(--accent); }
+        .menu { display: flex; flex-direction: column; gap: 10px; }
+        .menu-item {
+            text-decoration: none; padding: 12px 20px; border-radius: 8px; color: #ccc;
+            font-weight: 500; display: flex; align-items: center; gap: 15px; transition: 0.3s;
+        }
+        .menu-item:hover, .menu-item.active { background-color: rgba(255,255,255,0.1); color: white; border-left: 4px solid var(--accent); }
+        .menu-item i { width: 25px; text-align: center; }
+        .logout-link { margin-top: auto; color: #E76F51 !important; }
+
+        .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 40px; }
+
+        /* Search Bar */
+        .search-container {
+            display: flex; gap: 10px; margin-bottom: 30px;
+            background: white; padding: 15px; border-radius: var(--radius);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .search-input { flex: 1; border: none; outline: none; font-size: 1rem; }
+        .search-btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+
+        /* Student Grid */
+        .student-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
+        }
+
+        /* Student Card Style */
+        .student-card {
+            background: white; padding: 30px 20px; border-radius: var(--radius);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center;
+            transition: 0.3s; position: relative; overflow: hidden;
+        }
+        .student-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+
+        .avatar {
+            width: 80px; height: 80px; border-radius: 50%; object-fit: cover;
+            margin: 0 auto 15px; border: 3px solid var(--accent);
+        }
+        .student-name { font-size: 1.1rem; font-weight: bold; color: #333; margin-bottom: 5px; }
+        .student-nim { color: #666; font-size: 0.9rem; margin-bottom: 5px; display: block; font-family: monospace; }
+        .student-prodi { color: var(--accent); font-weight: 600; font-size: 0.85rem; margin-bottom: 15px; display: block; }
+        
+        .status-dot {
+            height: 10px; width: 10px; background-color: #28a745; border-radius: 50%;
+            display: inline-block; margin-right: 5px;
+        }
+        .status-text { font-size: 0.8rem; color: #28a745; }
+        
+        /* Jika status dilaporkan */
+        .card-reported .status-dot { background-color: #dc3545; }
+        .card-reported .status-text { color: #dc3545; }
+        
+        .btn-contact {
+            margin-top: 15px; display: inline-block; padding: 8px 20px;
+            border: 1px solid var(--primary); color: var(--primary); border-radius: 20px;
+            text-decoration: none; font-size: 0.85rem; transition: 0.3s;
+        }
+        .btn-contact:hover { background: var(--primary); color: white; }
+
+        @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; width: 100%; } }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="brand"><h2>BAC ADMIN</h2><span>Panel Pengelola</span></div>
+        <nav class="menu">
+            <a href="dashboardadmin.html" class="menu-item"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="laporan.html" class="menu-item"><i class="fas fa-inbox"></i> Laporan Masuk</a>
+            
+            <a href="daftarmahasiswa.html" class="menu-item active"><i class="fas fa-users"></i> Data Mahasiswa</a>
+            
+            <a href="../index.html" class="menu-item logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <h2 style="margin-bottom:20px; color:#264653;">Database Mahasiswa</h2>
+
+        <div class="search-container">
+            <i class="fas fa-search" style="color:#888; align-self:center;"></i>
+            <input type="text" id="studentSearch" class="search-input" placeholder="Cari Nama, NIM, atau Jurusan...">
+            <button class="search-btn">Cari</button>
+        </div>
+
+        <div class="student-grid" id="studentGrid">
+            
+            <div class="student-card">
+                <img src="https://ui-avatars.com/api/?name=Muhammad+Reyhan&background=random" class="avatar" alt="Foto">
+                <div class="student-name">Muhammad Reyhan</div>
+                <span class="student-nim">2802536713</span>
+                <span class="student-prodi">Computer Science</span>
+                <div>
+                    <span class="status-dot"></span><span class="status-text">Active (Good)</span>
+                </div>
+                <a href="#" class="btn-contact"><i class="far fa-envelope"></i> Hubungi</a>
+            </div>
+
+            <div class="student-card card-reported">
+                <img src="https://ui-avatars.com/api/?name=Andi+Susanto&background=random" class="avatar" alt="Foto">
+                <div class="student-name">Andi Susanto</div>
+                <span class="student-nim">2801122334</span>
+                <span class="student-prodi">Business Management</span>
+                <div>
+                    <span class="status-dot"></span><span class="status-text">Terlapor (1 Kasus)</span>
+                </div>
+                <a href="#" class="btn-contact"><i class="far fa-envelope"></i> Hubungi</a>
+            </div>
+
+            <div class="student-card">
+                <img src="https://ui-avatars.com/api/?name=Siti+Aminah&background=random" class="avatar" alt="Foto">
+                <div class="student-name">Siti Aminah</div>
+                <span class="student-nim">2801998877</span>
+                <span class="student-prodi">Desain Komunikasi Visual</span>
+                <div>
+                    <span class="status-dot"></span><span class="status-text">Active (Good)</span>
+                </div>
+                <a href="#" class="btn-contact"><i class="far fa-envelope"></i> Hubungi</a>
+            </div>
+
+            <div class="student-card">
+                <img src="https://ui-avatars.com/api/?name=Kevin+Wijaya&background=random" class="avatar" alt="Foto">
+                <div class="student-name">Kevin Wijaya</div>
+                <span class="student-nim">2803344556</span>
+                <span class="student-prodi">Information Systems</span>
+                <div>
+                    <span class="status-dot"></span><span class="status-text">Active (Good)</span>
+                </div>
+                <a href="#" class="btn-contact"><i class="far fa-envelope"></i> Hubungi</a>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('studentSearch').addEventListener('keyup', function() {
+            let filter = this.value.toLowerCase();
+            let cards = document.querySelectorAll('.student-card');
+
+            cards.forEach(function(card) {
+                let text = card.textContent.toLowerCase();
+                if(text.includes(filter)) {
+                    card.style.display = "";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
