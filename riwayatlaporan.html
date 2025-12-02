@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binus SafeLine - Riwayat Laporan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- CSS VARIABLES & RESET (Sama dengan Dashboard) --- */
+        :root {
+            --primary: #0088CC; 
+            --secondary: #264653;
+            --text-dark: #333;
+            --text-grey: #666;
+            --bg-light: #F8F9FA;
+            --white: #FFFFFF;
+            --sidebar-width: 260px;
+            --radius: 8px;
+            
+            /* Warna Status */
+            --status-pending-bg: #FFF3CD;
+            --status-pending-text: #856404;
+            --status-process-bg: #CCE5FF;
+            --status-process-text: #004085;
+            --status-done-bg: #D4EDDA;
+            --status-done-text: #155724;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            background-color: var(--bg-light);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- SIDEBAR STYLE (Sama dengan file lain) --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--white);
+            padding: 30px 20px;
+            position: fixed;
+            height: 100vh;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .brand { margin-bottom: 40px; padding-left: 10px; }
+        .brand h2 { font-size: 1.5rem; color: #000; font-weight: bold; }
+        .brand span { font-size: 0.9rem; color: var(--text-grey); display: block; margin-top: 5px; }
+
+        .menu { display: flex; flex-direction: column; gap: 10px; }
+
+        /* Perbaikan Menu Item */
+        .menu-item {
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: var(--text-grey);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease; /* Transisi lebih halus */
+            border: 1px solid transparent; /* Mencegah lompatan ukuran saat border berubah */
+        }
+
+        /* Perbaikan Ikon agar Rata Lurus */
+        .menu-item i { 
+            width: 25px; /* Lebar tetap agar teks lurus vertikal */
+            text-align: center;
+            display: inline-block;
+        }
+
+        /* Efek Hover */
+        .menu-item:hover {
+            background-color: #f0f8ff;
+            color: var(--primary);
+            padding-left: 25px; /* Efek geser sedikit saat di-hover (opsional, keren) */
+        }
+
+        /* Menu yang Sedang Aktif (Biru) */
+        .menu-item.active {
+            background-color: var(--primary);
+            color: var(--white);
+            box-shadow: 0 4px 10px rgba(0, 136, 204, 0.3);
+        }
+
+        /* MENGHILANGKAN GARIS PUTUS-PUTUS (FOKUS) */
+        .menu-item:focus, .menu-item:active {
+            outline: none; /* Hilangkan kotak garis biru bawaan browser */
+            background-color: #f0f8ff; /* Warna saat diklik tahan */
+        }
+
+        .logout-link { margin-top: auto; color: #E76F51; }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 40px;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 { color: var(--secondary); }
+
+        /* --- LIST CARD STYLE --- */
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .history-card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+            border-left: 5px solid transparent;
+        }
+
+        .history-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Border warna-warni berdasarkan status (Opsional) */
+        .history-card.status-pending { border-left-color: #ffc107; }
+        .history-card.status-process { border-left-color: #0088CC; }
+        .history-card.status-done { border-left-color: #28a745; }
+
+        .card-left {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .card-icon {
+            width: 50px; height: 50px;
+            background: #f0f2f5;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; color: var(--secondary);
+        }
+
+        .card-info h4 { margin-bottom: 5px; color: #333; font-size: 1.1rem; }
+        .card-info span { font-size: 0.9rem; color: #888; display: block; margin-bottom: 5px; }
+        .ticket-id { font-family: monospace; background: #eee; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; }
+
+        .card-right {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        /* Status Badges */
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .bg-pending { background-color: var(--status-pending-bg); color: var(--status-pending-text); }
+        .bg-process { background-color: var(--status-process-bg); color: var(--status-process-text); }
+        .bg-done { background-color: var(--status-done-bg); color: var(--status-done-text); }
+
+        .btn-detail {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid var(--primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+
+        .btn-detail:hover { background: var(--primary); color: white; }
+
+        /* Responsive Mobile */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; width: 100%; }
+            .history-card { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .card-right { align-items: flex-start; text-align: left; width: 100%; flex-direction: row; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="brand">
+            <h2>Binus SafeLine</h2>
+            <span>Semesta Apps</span>
+        </div>
+
+        <nav class="menu">
+            <a href="dashboard.html" class="menu-item">
+                <i class="fas fa-th-large"></i> Dashboard
+            </a>
+            <a href="lapor.html" class="menu-item">
+                <i class="fas fa-edit"></i> Buat Laporan
+            </a>
+            
+            <a href="riwayatlaporan.html" class="menu-item active">
+                <i class="fas fa-book"></i> Riwayat Laporan
+            </a>
+            
+            <a href="konselor.html" class="menu-item">
+                <i class="fas fa-comments"></i> Chat Konselor
+            </a>
+
+            <a href="edukasi.html" class="menu-item"><i class="fas fa-bullhorn"></i> Pusat Edukasi</a>
+            
+            <a href="index.html" class="menu-item logout-link">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h2>Riwayat Laporan Anda</h2>
+            <select style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+                <option>Semua Status</option>
+                <option>Diproses</option>
+                <option>Selesai</option>
+            </select>
+        </div>
+
+        <div class="history-list">
+            
+            <div class="history-card status-pending">
+                <div class="card-left">
+                    <div class="card-icon"><i class="fas fa-bullhorn"></i></div>
+                    <div class="card-info">
+                        <h4>Bullying Verbal di Kantin</h4>
+                        <span><span class="ticket-id">#LP-2025-003</span> &bull; 02 Des 2025</span>
+                        <small style="color:#666;">Laporan dikirim secara Anonim.</small>
+                    </div>
+                </div>
+                <div class="card-right">
+                    <span class="badge bg-pending">Menunggu Verifikasi</span>
+                    <a href="#" class="btn-detail">Lihat Detail</a>
+                </div>
+            </div>
+
+            <div class="history-card status-process">
+                <div class="card-left">
+                    <div class="card-icon"><i class="fas fa-user-secret"></i></div>
+                    <div class="card-info">
+                        <h4>Cyberbullying via Instagram</h4>
+                        <span><span class="ticket-id">#LP-2025-002</span> &bull; 01 Des 2025</span>
+                        <small style="color:#666;">Bukti screenshot telah diverifikasi admin.</small>
+                    </div>
+                </div>
+                <div class="card-right">
+                    <span class="badge bg-process">Sedang Diproses</span>
+                    <a href="chat.html" class="btn-detail">Chat Admin</a>
+                </div>
+            </div>
+
+            <div class="history-card status-done">
+                <div class="card-left">
+                    <div class="card-icon"><i class="fas fa-fist-raised"></i></div>
+                    <div class="card-info">
+                        <h4>Ancaman Fisik di Parkiran</h4>
+                        <span><span class="ticket-id">#LP-2025-001</span> &bull; 28 Nov 2025</span>
+                        <small style="color:#666;">Kasus ditutup. Mediasi berhasil dilakukan.</small>
+                    </div>
+                </div>
+                <div class="card-right">
+                    <span class="badge bg-done">Selesai</span>
+                    <a href="#" class="btn-detail">Lihat Hasil</a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>

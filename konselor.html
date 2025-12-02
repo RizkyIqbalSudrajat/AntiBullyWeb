@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAC - Pilih Konselor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- CSS VARIABLES & RESET (Sama dengan Dashboard) --- */
+        :root {
+            --primary: #0088CC;
+            --secondary: #264653;
+            --wa-color: #25D366;
+            /* Warna Khas WhatsApp */
+            --text-dark: #333;
+            --text-grey: #666;
+            --bg-light: #F8F9FA;
+            --white: #FFFFFF;
+            --sidebar-width: 260px;
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- SIDEBAR (Sama seperti file lainnya) --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--white);
+            padding: 30px 20px;
+            position: fixed;
+            height: 100vh;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .brand {
+            margin-bottom: 40px;
+            padding-left: 10px;
+        }
+
+        .brand h2 {
+            font-size: 1.5rem;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .brand span {
+            font-size: 0.9rem;
+            color: var(--text-grey);
+            display: block;
+            margin-top: 5px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Perbaikan Menu Item */
+        .menu-item {
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: var(--text-grey);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease; /* Transisi lebih halus */
+            border: 1px solid transparent; /* Mencegah lompatan ukuran saat border berubah */
+        }
+
+        /* Perbaikan Ikon agar Rata Lurus */
+        .menu-item i { 
+            width: 25px; /* Lebar tetap agar teks lurus vertikal */
+            text-align: center;
+            display: inline-block;
+        }
+
+        /* Efek Hover */
+        .menu-item:hover {
+            background-color: #f0f8ff;
+            color: var(--primary);
+            padding-left: 25px; /* Efek geser sedikit saat di-hover (opsional, keren) */
+        }
+
+        /* Menu yang Sedang Aktif (Biru) */
+        .menu-item.active {
+            background-color: var(--primary);
+            color: var(--white);
+            box-shadow: 0 4px 10px rgba(0, 136, 204, 0.3);
+        }
+
+        /* MENGHILANGKAN GARIS PUTUS-PUTUS (FOKUS) */
+        .menu-item:focus, .menu-item:active {
+            outline: none; /* Hilangkan kotak garis biru bawaan browser */
+            background-color: #f0f8ff; /* Warna saat diklik tahan */
+        }
+
+        .logout-link {
+            margin-top: auto;
+            color: #E76F51;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 40px;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: var(--text-grey);
+        }
+
+        /* --- COUNSELOR GRID --- */
+        .counselor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .counselor-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
+            border-top: 4px solid transparent;
+        }
+
+        .counselor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Status Dot (Online/Offline) */
+        .status-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .status-online {
+            background: #dcf8c6;
+            color: #128c7e;
+            border: 1px solid #128c7e;
+        }
+
+        .status-offline {
+            background: #f0f0f0;
+            color: #999;
+            border: 1px solid #ccc;
+        }
+
+        /* Avatar */
+        .avatar {
+            width: 90px;
+            height: 90px;
+            background-color: #eee;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            background-image: url('https://ui-avatars.com/api/?name=Admin+Binus&background=random');
+            /* Dummy Image */
+            background-size: cover;
+            border: 3px solid white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .info h3 {
+            color: var(--secondary);
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .info span {
+            color: var(--primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .info p {
+            color: var(--text-grey);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        /* WhatsApp Button */
+        .btn-wa {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: var(--wa-color);
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-wa:hover {
+            background-color: #1da851;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+        }
+
+        /* Responsive Mobile */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="brand">
+            <h2>Binus SafeLine</h2>
+            <span>Semesta Apps</span>
+        </div>
+
+        <nav class="menu">
+            <a href="dashboard.html" class="menu-item">
+                <i class="fas fa-th-large"></i> Dashboard
+            </a>
+            <a href="lapor.html" class="menu-item">
+                <i class="fas fa-edit"></i> Buat Laporan
+            </a>
+            <a href="riwayatlaporan.html" class="menu-item">
+                <i class="fas fa-book"></i> Riwayat Laporan
+            </a>
+
+            <a href="konselor.html" class="menu-item active">
+                <i class="fas fa-comments"></i> Chat Konselor
+            </a>
+            <a href="edukasi.html" class="menu-item"><i class="fas fa-bullhorn"></i> Pusat Edukasi</a>
+
+            <a href="index.html" class="menu-item logout-link">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h2>Pilih Konselor</h2>
+            <p>Konselor kami siap mendengarkan cerita Anda. Privasi Anda terjamin. Silakan pilih konselor yang tersedia.
+            </p>
+        </div>
+
+        <div class="counselor-grid">
+
+            <div class="counselor-card" style="border-top-color: #0088CC;">
+                <span class="status-badge status-online">Online</span>
+                <div class="avatar"
+                    style="background-image: url('https://ui-avatars.com/api/?name=Admin+BAC&background=0088CC&color=fff');">
+                </div>
+                <div class="info">
+                    <h3>Admin SafeLine</h3>
+                    <span>Helpdesk & Laporan Umum</span>
+                    <p>Hubungi admin untuk kendala teknis pelaporan atau pertanyaan umum seputar prosedur BAC.</p>
+                </div>
+                <a href="https://wa.me/6281234567890?text=Halo%20Admin%20BAC,%20saya%20ingin%20bertanya%20seputar%20laporan."
+                    target="_blank" class="btn-wa">
+                    <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> Chat via WhatsApp
+                </a>
+            </div>
+
+            <div class="counselor-card" style="border-top-color: #E9C46A;">
+                <span class="status-badge status-online">Online</span>
+                <div class="avatar"
+                    style="background-image: url('https://ui-avatars.com/api/?name=Sarah+Psikolog&background=E9C46A&color=fff');">
+                </div>
+                <div class="info">
+                    <h3>Ms. Sarah, M.Psi</h3>
+                    <span>Psikolog Klinis Kampus</span>
+                    <p>Spesialis penanganan trauma bullying, kecemasan akademik, dan manajemen stres.</p>
+                </div>
+                <a href="https://wa.me/6281234567891?text=Halo%20Ms.%20Sarah,%20saya%20mahasiswa%20Binus%20ingin%20konseling."
+                    target="_blank" class="btn-wa">
+                    <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> Chat via WhatsApp
+                </a>
+            </div>
+
+            <div class="counselor-card" style="border-top-color: #2A9D8F;">
+                <span class="status-badge status-offline">Offline</span>
+                <div class="avatar"
+                    style="background-image: url('https://ui-avatars.com/api/?name=Budi+Santoso&background=2A9D8F&color=fff');">
+                </div>
+                <div class="info">
+                    <h3>Mr. Budi Santoso</h3>
+                    <span>Student Advisory Center</span>
+                    <p>Bantuan terkait masalah akademik akibat bullying, cuti kuliah, dan mediasi dengan dosen.</p>
+                </div>
+                <a href="https://wa.me/6281234567892?text=Halo%20SAC,%20saya%20ingin%20konsultasi." target="_blank"
+                    class="btn-wa" style="background-color:#ccc; cursor: help;">
+                    <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> Tinggalkan Pesan
+                </a>
+            </div>
+
+            <div class="counselor-card" style="border-top-color: #E76F51;">
+                <span class="status-badge status-online">Siaga 24 Jam</span>
+                <div class="avatar"
+                    style="background-image: url('https://ui-avatars.com/api/?name=Satgas+Keamanan&background=E76F51&color=fff');">
+                </div>
+                <div class="info">
+                    <h3>Satgas Keamanan</h3>
+                    <span>Emergency Response</span>
+                    <p>Hanya untuk keadaan darurat fisik atau ancaman yang sedang berlangsung di area kampus.</p>
+                </div>
+                <a href="https://wa.me/6281234567899?text=TOLONG%20SAYA%20DALAM%20BAHAYA%20DI%20KAMPUS" target="_blank"
+                    class="btn-wa" style="background-color: #E76F51;">
+                    <i class="fas fa-exclamation-triangle"></i> Darurat
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+
+</html>

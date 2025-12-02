@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binus Anti-Bullying Center (BAC) - Login</title>
+    <style>
+        :root {
+            --primary: #2A9D8F;
+            --secondary: #264653;
+            --accent: #E9C46A;
+            --bg-light: #F4F7F6;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--white);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVBAR --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 90%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--secondary); }
+        .logo span { color: var(--primary); }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--secondary);
+            margin-left: 20px;
+            font-weight: 500;
+        }
+
+        /* --- HERO SECTION (LOGIN AREA) --- */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 100vh; /* Full screen height */
+            padding: 80px 5% 40px; /* Top padding accounts for navbar */
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+        }
+
+        .hero-text {
+            flex: 1;
+            padding-right: 50px;
+        }
+
+        .hero-text h1 {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .btn-learn {
+            padding: 12px 25px;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn-learn:hover { background: var(--primary); color: white; }
+
+        /* --- LOGIN CARD --- */
+        .login-card {
+            flex: 0 0 400px; /* Fixed width */
+            background: var(--white);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .login-card h2 { color: var(--primary); margin-bottom: 20px; text-align: center; }
+
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; }
+        .input-group input {
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;
+            box-sizing: border-box; /* Fix padding width issue */
+        }
+
+        .btn-login {
+            width: 100%; padding: 15px; background: var(--secondary); color: white;
+            border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; transition: 0.3s;
+        }
+        .btn-login:hover { background: var(--primary); }
+
+        /* --- CONTENT SECTIONS (SCROLLABLE) --- */
+        .section { padding: 80px 5%; }
+        .section h2 { text-align: center; font-size: 2.5rem; color: var(--secondary); margin-bottom: 40px; }
+        
+        .bg-light { background-color: var(--bg-light); }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-box {
+            background: white; padding: 30px; border-radius: 10px;
+            text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .feature-icon { font-size: 3rem; margin-bottom: 20px; display: block; }
+
+        /* Footer */
+        footer { background: var(--secondary); color: white; text-align: center; padding: 20px; }
+
+        /* Responsive */
+        @media (max-width: 800px) {
+            .hero { flex-direction: column; text-align: center; justify-content: center; }
+            .hero-text { padding: 0; margin-bottom: 40px; }
+            .login-card { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">BINUS <span>BAC</span></div>
+        <div class="nav-links">
+            <a href="#about">Tentang Kami</a>
+            <a href="#fitur">Layanan</a>
+            <a href="#kontak">Kontak</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Kampus Aman,<br>Mahasiswa Nyaman.</h1>
+            <p>
+                Binus Anti-Bullying Center (BAC) hadir sebagai ruang aman bagi Binusian 
+                untuk melaporkan, berkonsultasi, dan mendapatkan perlindungan dari segala bentuk perundungan.
+            </p>
+            <a href="#about" class="btn-learn">Pelajari Lebih Lanjut &darr;</a>
+        </div>
+
+        <div class="login-card">
+            <h2>Login Binusian</h2>
+            <form action="dashboard.html" method="GET"> 
+                <div class="input-group">
+                    <label for="nim">NIM / Email Binus</label>
+                    <input type="text" id="nim" name="username" placeholder="Contoh: 280123456" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Masukan password" required>
+                </div>
+                <button type="submit" class="btn-login">Masuk</button>
+                <p style="text-align:center; font-size:0.9rem; margin-top:15px; color:#888;">
+                    Masuk menggunakan akun Binusmaya Anda.
+                </p>
+            </form>
+        </div>
+    </section>
+
+    <section id="about" class="section bg-light">
+        <h2>Tentang BAC</h2>
+        <div style="max-width: 800px; margin: 0 auto; text-align: center; font-size: 1.1rem; line-height: 1.8;">
+            <p>
+                Bullying tidak memiliki tempat di lingkungan akademik. 
+                <strong>Binus Anti-Bullying Center (BAC)</strong> didirikan sebagai wujud komitmen universitas 
+                untuk menciptakan lingkungan belajar yang inklusif, aman, dan mendukung kesehatan mental.
+            </p>
+            <p style="margin-top: 20px;">
+                Kami menjamin <strong>kerahasiaan pelapor</strong>, menyediakan pendampingan psikologis, 
+                dan menegakkan sanksi disipliner yang tegas bagi pelaku sesuai peraturan kampus.
+            </p>
+        </div>
+    </section>
+
+    <section id="fitur" class="section">
+        <h2>Layanan Kami</h2>
+        <div class="grid-3">
+            <div class="feature-box">
+                <span class="feature-icon">🛡️</span>
+                <h3>Pelaporan Aman</h3>
+                <p>Laporkan insiden bullying verbal, fisik, maupun cyber dengan bukti yang valid. Identitas bisa disamarkan.</p>
+            </div>
+            <div class="feature-box">
+                <span class="feature-icon">⚖️</span>
+                <h3>Mediasi & Sanksi</h3>
+                <p>Penyelesaian masalah melalui jalur mediasi atau tindakan disipliner oleh komite etik.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Binus Anti-Bullying Center. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
